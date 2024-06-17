@@ -32,7 +32,8 @@ def take_screenshot(vm_name, output_file):
                 data = stream.recv(1024 * 1024)
                 if data is None:
                     break
-                f.write(data)
+                if isinstance(data, bytes):
+                    f.write(data)
             except libvirt.libvirtError as e:
                 print(f'Failed to receive screenshot data: {e}', file=sys.stderr)
                 break
