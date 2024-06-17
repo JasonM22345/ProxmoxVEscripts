@@ -25,7 +25,7 @@ def attach_usb2_controller(vm_name, controller_id):
 
     # Create the USB 2 controller element with an ID
     usb2_controller_xml = f"""
-    <controller type='usb' model='ich9-ehci1' id='{controller_id}'/>
+    <controller type='usb' model='ich9-ehci' index='0'/>
     """
     usb2_controller = ET.fromstring(usb2_controller_xml)
 
@@ -43,8 +43,8 @@ def attach_usb2_controller(vm_name, controller_id):
 
     # Update the VM's configuration
     try:
-        vm.updateDeviceFlags(updated_xml_desc, libvirt.VIR_DOMAIN_AFFECT_CONFIG)
-        print(f'USB 2 controller with ID {controller_id} attached to VM {vm_name} successfully')
+        conn.defineXML(updated_xml_desc)
+        print(f'USB 2 controller attached to VM {vm_name} successfully')
     except libvirt.libvirtError as e:
         print(f'Failed to attach USB 2 controller to VM {vm_name}: {e}', file=sys.stderr)
 
@@ -79,11 +79,11 @@ def detach_usb2_controller(vm_name, controller_id):
         conn.close()
         return
 
-    usb2_controller = devices.find(f"controller[@type='usb'][@model='ich9-ehci1'][@id='{controller_id}']")
+    usb2_controller = devices.find(f"controller[@type='usb'][@model='ich9-ehci']")
     if usb2_controller is not None:
         devices.remove(usb2_controller)
     else:
-        print(f'No USB 2 controller with ID {controller_id} found in the XML for {vm_name}', file=sys.stderr)
+        print(f'No USB 2 controller found in the XML for {vm_name}', file=sys.stderr)
         conn.close()
         return
 
@@ -92,8 +92,8 @@ def detach_usb2_controller(vm_name, controller_id):
 
     # Update the VM's configuration
     try:
-        vm.updateDeviceFlags(updated_xml_desc, libvirt.VIR_DOMAIN_AFFECT_CONFIG)
-        print(f'USB 2 controller with ID {controller_id} detached from VM {vm_name} successfully')
+        conn.defineXML(updated_xml_desc)
+        print(f'USB 2 controller detached from VM {vm_name} successfully')
     except libvirt.libvirtError as e:
         print(f'Failed to detach USB 2 controller from VM {vm_name}: {e}', file=sys.stderr)
 
@@ -104,9 +104,9 @@ def detach_usb2_controller(vm_name, controller_id):
 if __name__ == '__main__':
     vm_name = 'your_vm_name'  # Replace with the name of the VM
     action = 'attach'  # Replace with 'detach' to detach the controller
-    controller_id = '1'  # Replace with the desired controller ID
 
     if action == 'attach':
-        attach_usb2_controller(vm_name, controller_id)
+        attach_usb2_controller(vm_name)
     elif action == 'detach':
-        detach_usb2_controller(vm_name, controller_id)
+        detach_usb2_controller(vm_name)
+    
