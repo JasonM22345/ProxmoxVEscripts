@@ -1,0 +1,25 @@
+<domain type='kvm'>
+  ...
+  <devices>
+    ...
+    <serial type='tcp'>
+      <source mode='bind' host='0.0.0.0' service='1234'/>
+      <protocol type='raw'/>
+      <target port='0'/>
+    </serial>
+  </devices>
+</domain>
+
+
+
+<domain type='kvm'>
+  ...
+  <devices>
+    ...
+    <serial type='tcp'>
+      <source mode='connect' host='192.168.122.1' service='1234'/>
+      <protocol type='raw'/>
+      <target port='0'/>
+    </serial>
+  </devices>
+</domain>
