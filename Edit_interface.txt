@@ -1,0 +1,13 @@
+# Define variables
+VM_NAME="myvm"
+OLD_BRIDGE="old-bridge"
+NEW_BRIDGE="new-bridge"
+
+# Get the MAC address of the existing interface
+MAC_ADDRESS=$(virsh dumpxml $VM_NAME | grep 'mac address' | head -n 1 | awk -F"'" '{print $2}')
+
+# Detach the existing interface
+virsh detach-interface $VM_NAME --type bridge --mac $MAC_ADDRESS
+
+# Attach the new interface
+virsh attach-interface $VM_NAME --type bridge --source $NEW_BRIDGE --model virtio --mac $MAC_ADDRESS
