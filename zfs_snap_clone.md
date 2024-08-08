@@ -126,7 +126,6 @@ if __name__ == "__main__":
 
 ### Mermaid.js Diagram
 
-Here's a Mermaid.js script to illustrate the process with a colored graph.
 
 ```mermaid
 graph TB
